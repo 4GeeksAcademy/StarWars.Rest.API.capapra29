@@ -9,17 +9,18 @@ class User(db.Model):
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
 
     def __repr__(self):
-        return '<User %r>' % self.username
+        return '<User %r>' % self.email
 
     def serialize(self):
         return {
             "id": self.id,
             "email": self.email,
+            "is_active": self.is_active
             # do not serialize the password, its a security breach
         }
 
 class Planeta(db.Model):
-    __tablename__ = 'planeta'
+    
    
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(250), nullable=False)
@@ -39,44 +40,45 @@ class Planeta(db.Model):
         }
     
 class Favorito(db.Model):
-    __tablename__ = 'favorito'
+   
 
     id = db.Column(db.Integer, primary_key=True)
-    person_id = db.Column(db.Integer, db.ForeignKey("person.id"))
-    person=db.relationship("Person")
+    person_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    person=db.relationship("User")
     planeta_id = db.Column(db.Integer, db.ForeignKey("planeta.id"))
     planeta=db.relationship(Planeta)
     personaje_id = db.Column(db.Integer, db.ForeignKey("personaje.id"))
-    personaje=db.relationship("Person")
+    personaje=db.relationship("Personaje")
 
     def __repr__(self):
-        return '<Favorito %r>' % self.username
+        return '<Favorito %r>' % self.id
 
     def serialize(self):
         return {
             "id": self.id,
             "person_id": self.person_id,
-            "person": self.person
+            "planeta_id": self.planeta_id,
+            "personaje_id": self.personaje_id
         
          
         }
     
-class Person(db.Model):
-    __tablename__ = 'person'
-    # Here we define columns for the table person
-    # Notice that each column is also a normal Python instance attribute.
+class Personaje(db.Model):
+    
+    
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(250), nullable=False)
-    email = db.Column(db.String(250), nullable=False)
-    password = db.Column(db.String(250), nullable=False)
+    eye_color = db.Column(db.String(250), nullable=False)
+    hair_color = db.Column(db.String(250), nullable=False)
 
     def __repr__(self):
-        return '<person %r>' % self.username
+        return '<Personaje %r>' % self.name
 
     def serialize(self):
         return {
             "id": self.id,
             "name": self.name,
-            # do not serialize the password, its a security breach
+            "eye_color": self.eye_color,
+            "hair_color": self.hair_color
         }
 
